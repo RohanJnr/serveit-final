@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+opencv-python = "*"
+websockets = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pyserial = "*"
+
+[dev-packages]
+
+[scripts]
+cmd_server="uvicorn cmd_server:app --reload"
+stream_server="python stream_server.py"
+
+[requires]
+python_version = "3.9"
