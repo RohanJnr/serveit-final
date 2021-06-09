@@ -5,10 +5,8 @@ name = "pypi"
 
 [packages]
 opencv-python = "*"
-websockets = "*"
-fastapi = "*"
-uvicorn = {extras = ["standard"], version = "*"}
 pyserial = "*"
+websocket-client = "*"
 
 [dev-packages]
 

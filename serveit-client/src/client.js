@@ -3,35 +3,47 @@ const fs = require('fs');
 const path = require('path');
 
 
+const commands = {
+  w: "f",
+  a: "l",
+  s: "b",
+  d: "r"
+}
+
 const image = document.getElementById("stream-image")
 const snapBtn= document.getElementById("snap-btn")
 
 let currentFrame = null
 
-const ws_cmd = new WebSocket('http://127.0.0.1:8000/ws/cmd');
-const ws_fetch_stream = new WebSocket('ws://localhost:9000');
+const server = new WebSocket('ws://localhost:8080');
 
 
-ws_fetch_stream.on('open', function open() {
-  console.log('Stream socket connected.');
-})
-ws_cmd.on('open', function open() {
+server.on('open', function open() {
   console.log('Cmd socket connected.');
+  server.send("client_password")
 })
 
-ws_fetch_stream.on('message', function incoming(data) {
+
+server.on('message', function incoming(data) {
+  console.log("A message")
   currentFrame = `data:image/jpeg;base64,${data}`
   image.src = currentFrame
-})
-
-ws_cmd.on('message', function incoming(data) {
-  console.log(data)
 })
 
 document.addEventListener("keydown", e => {
     //by pressing "Q" letter on your keyboard, the bulgarian keyboard will print "," (a comma) and you will get the value of the key being pressed
     console.log(e.key); // prints ","
-    ws_cmd.send(e.key)
+    if (commands[e.key] !== undefined){
+      const data = {
+        method: "command",
+        cmd: commands[e.key]
+      }
+      server.send(JSON.stringify(data))
+    }
+    else {
+      console.log("invalid command.")
+    }
+    
 })
 
 snapBtn.addEventListener("click", e => {
